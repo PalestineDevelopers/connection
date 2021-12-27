@@ -1,0 +1,30 @@
+name: connection
+on:
+  push:
+    branches: [main]
+    paths:
+      - "connection/**"
+      - ".github/workflows/connection.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "connection/**"
+      - ".github/workflows/connection.yml"
+jobs:
+  test:
+    defaults:
+      run:
+        working-directory: ./connection
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: subosito/flutter-action@v1
+        with:
+          flutter-version: "2.5.3"
+          channel: "stable"
+      - run: flutter pub get
+      - run: flutter test --coverage
+      - name: Coverage
+        uses: VeryGoodOpenSource/very_good_coverage@v1.2.0
+        with:
+          path: "connection/coverage/lcov.info"
