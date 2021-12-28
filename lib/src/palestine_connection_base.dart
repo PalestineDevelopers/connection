@@ -2,6 +2,10 @@ import 'dart:async';
 import 'dart:developer' as developer;
 import 'dart:io';
 
+import 'package:palestine_connection/palestine_connection.dart';
+
+typedef VoidCallback = void Function();
+
 class PalConnection {
   factory PalConnection() => _singleton;
   PalConnection._internal() {
@@ -13,7 +17,10 @@ class PalConnection {
   bool hasConnection = false;
 
   /// Timer object
-  late Timer timer;
+  Timer? timer;
+
+  final StreamController _streamController = StreamController();
+  bool prevConnectionState = true;
 
   ///---
   /// initialize package
@@ -22,47 +29,41 @@ class PalConnection {
   void initialize({
     String domain = PalDomain.random,
     required int periodicInSeconds,
-    required onConnectionLost,
-    required onConnectionRestored,
+    required VoidCallback onConnectionLost,
+    required VoidCallback onConnectionRestored,
   }) {
-    bool notifyConnectionRestore = false;
-    bool notifyConnectionLost = true;
+    String _domain = domain;
 
-    timer = Timer.periodic(Duration(seconds: periodicInSeconds),
-        (Timer timer) async {
-      if (domain == PalDomain.random) {
-        final List<String> _domainsList = <String>[
-          PalDomain.google,
-          PalDomain.github,
-          PalDomain.yahoo,
-          PalDomain.facebook,
-          PalDomain.microsoft,
-          PalDomain.youtube,
-          PalDomain.twitter,
-          PalDomain.wikipedia,
-          PalDomain.instagram,
-        ];
-        domain = (_domainsList..shuffle()).first;
-      }
-      final bool state = await checkConnection(domain);
+    if (domain == PalDomain.random) {
+      _domain = getRandomDomain();
+    }
 
-      if (!state && notifyConnectionLost) {
-        notifyConnectionRestore = true;
-        notifyConnectionLost = false;
-        onConnectionLost();
-      }
+    timer = Timer.periodic(
+      Duration(seconds: periodicInSeconds),
+      (Timer timer) => periodicCheck(
+        domain: _domain,
+        onConnectionLost: onConnectionLost,
+        onConnectionRestored: onConnectionRestored,
+      ),
+    );
 
-      if (state && notifyConnectionRestore) {
-        notifyConnectionRestore = false;
-        notifyConnectionLost = true;
-        onConnectionRestored();
+    _streamController.stream.listen((event) {
+      if (event != prevConnectionState) {
+        prevConnectionState = event as bool;
+        event ? onConnectionRestored() : onConnectionLost();
       }
     });
   }
 
   /// Stop the process..
-  void dispose() {
-    timer.cancel();
+  bool dispose() {
+    if (timer != null && timer!.isActive) {
+      timer!.cancel();
+      _streamController.close();
+
+      return true;
+    }
+    return false;
   }
 
   ///---
@@ -80,20 +81,29 @@ class PalConnection {
 
     return hasConnection;
   }
-}
 
-class PalDomain {
-  static const String random = 'random';
-  static const String google = 'google.com';
-  static const String github = 'github.com';
-  static const String yahoo = 'yahoo.com';
-  static const String facebook = 'facebook.com';
-  static const String microsoft = 'microsoft.com';
-  static const String youtube = 'youtube.com';
-  static const String twitter = 'twitter.com';
-  static const String wikipedia = 'wikipedia.com';
-  static const String instagram = 'instagram.com';
+  String getRandomDomain() {
+    final List<String> _domainsList = <String>[
+      PalDomain.google,
+      PalDomain.github,
+      PalDomain.yahoo,
+      PalDomain.facebook,
+      PalDomain.microsoft,
+      PalDomain.youtube,
+      PalDomain.twitter,
+      PalDomain.wikipedia,
+      PalDomain.instagram,
+    ];
 
-  /// CHINA
-  static const String baidu = 'baidu.com';
+    return (_domainsList..shuffle()).first;
+  }
+
+  Future periodicCheck({
+    required String domain,
+    required VoidCallback onConnectionLost,
+    required VoidCallback onConnectionRestored,
+  }) async {
+    final bool state = await checkConnection(domain);
+    _streamController.add(state);
+  }
 }

@@ -4,3 +4,4 @@
 library palestine_connection;
 
 export 'src/palestine_connection_base.dart';
+export 'src/palestine_domain.dart';
