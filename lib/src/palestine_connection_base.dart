@@ -13,14 +13,10 @@ class PalConnection {
   }
   static final PalConnection _singleton = PalConnection._internal();
 
-  /// Connection check variable
-  bool hasConnection = false;
-
   /// Timer object
   Timer? timer;
 
-  final StreamController _streamController = StreamController();
-  bool prevConnectionState = true;
+  bool prevConnectionState = false;
 
   ///---
   /// initialize package
@@ -32,34 +28,22 @@ class PalConnection {
     required VoidCallback onConnectionLost,
     required VoidCallback onConnectionRestored,
   }) {
-    String _domain = domain;
-
-    if (domain == PalDomain.random) {
-      _domain = getRandomDomain();
-    }
-
     timer = Timer.periodic(
       Duration(seconds: periodicInSeconds),
-      (Timer timer) => periodicCheck(
-        domain: _domain,
-        onConnectionLost: onConnectionLost,
-        onConnectionRestored: onConnectionRestored,
-      ),
+      (Timer timer) async {
+        final bool state = await checkConnection(domain);
+        if (state != prevConnectionState) {
+          prevConnectionState = state;
+          state ? onConnectionRestored() : onConnectionLost();
+        }
+      },
     );
-
-    _streamController.stream.listen((event) {
-      if (event != prevConnectionState) {
-        prevConnectionState = event as bool;
-        event ? onConnectionRestored() : onConnectionLost();
-      }
-    });
   }
 
   /// Stop the process..
   bool dispose() {
     if (timer != null && timer!.isActive) {
       timer!.cancel();
-      _streamController.close();
 
       return true;
     }
@@ -72,14 +56,26 @@ class PalConnection {
   /// Should not be invoked directly
   Future<bool> checkConnection(String domain) async {
     try {
-      final List<InternetAddress> result = await InternetAddress.lookup(domain);
+      final String _domain = getDomainOrRandom(domain);
 
-      hasConnection = result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+      final List<InternetAddress> result =
+          await InternetAddress.lookup(_domain);
+
+      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
     } on SocketException catch (_) {
-      hasConnection = false;
+      developer.log('--PalConnection-- (Error) -> checkConnection');
+      return false;
     }
+  }
 
-    return hasConnection;
+  String getDomainOrRandom(String domain) {
+    return domain == PalDomain.random || !isValidDomainName(domain)
+        ? getRandomDomain()
+        : domain;
+  }
+
+  bool isValidDomainName(String domain) {
+    return domain.contains('.');
   }
 
   String getRandomDomain() {
@@ -96,14 +92,5 @@ class PalConnection {
     ];
 
     return (_domainsList..shuffle()).first;
-  }
-
-  Future periodicCheck({
-    required String domain,
-    required VoidCallback onConnectionLost,
-    required VoidCallback onConnectionRestored,
-  }) async {
-    final bool state = await checkConnection(domain);
-    _streamController.add(state);
   }
 }
