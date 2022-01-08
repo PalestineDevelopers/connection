@@ -1,16 +1,22 @@
 # palestine_connection
 
+## Part of [PalestineDevelopers](https://github.com/PalestineDevelopers)
+
 Lightweight internet connection test, lookup Google domain.
 
-[![License](https://img.shields.io/github/license/msayed-net/PalestineDevelopers)](https://github.com/msayed-net/PalestineDevelopers)
-[![Pub](https://img.shields.io/badge/Palestine%20Connection-pub-blue)](https://pub.dev/packages/palestine_connection)
-[![Example](https://img.shields.io/badge/Example-Ex-success)](https://pub.dev/packages/palestine_connection/example)
+[![License](https://img.shields.io/github/license/PalestineDevelopers/connection?style=for-the-badge)](https://github.com/PalestineDevelopers)
+[![Pub](https://img.shields.io/badge/SMS%20Misr-pub-blue?style=for-the-badge)](https://pub.dev/packages/palestine_connection)
+[![Example](https://img.shields.io/badge/Example-Ex-success?style=for-the-badge)](https://pub.dev/packages/palestine_connection/example)
 
-Part of PalestineDevelopers project
+[![GitHub release](https://img.shields.io/github/v/release/PalestineDevelopers/connection?style=for-the-badge)](https://github.com/PalestineDevelopers/connection/releases)
+[![GitHub stars](https://img.shields.io/github/stars/PalestineDevelopers/connection?style=for-the-badge)](https://github.com/PalestineDevelopers/connection)
+[![GitHub forks](https://img.shields.io/github/forks/PalestineDevelopers/connection?style=for-the-badge)](https://github.com/PalestineDevelopers/connection)
 
-[![Fork](https://img.shields.io/github/forks/msayed-net/PalestineDevelopers?style=social)](https://github.com/msayed-net/PalestineDevelopers)
-[![Star](https://img.shields.io/github/stars/msayed-net/PalestineDevelopers?style=social)](https://github.com/msayed-net/PalestineDevelopers)
-[![Watch](https://img.shields.io/github/watchers/msayed-net/PalestineDevelopers?style=social)](https://github.com/msayed-net/PalestineDevelopers)  
+## Table Of Contents
+
+* [Features](#features)
+* [Getting started](#getting-started)
+* [Usage](#usage)
 
 ## Features
 

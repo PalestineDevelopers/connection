@@ -2,7 +2,7 @@
 
 * Improvements
 
-## 0.0.17
+## 0.0.17 | 0.0.18
 
 * Automated tests.
 
