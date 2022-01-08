@@ -4,7 +4,6 @@ import 'package:test/test.dart';
 void main() {
   group('PalConnection', () {
     const String testInitValues = 'if variables has start type';
-    const String test2 = 'if hasConnection is variable';
     const String testGetRandomDomain = 'if getRandomDomain return String';
     const String testInit = 'if init working and timer assigned';
     const String testCheckConnection = 'if checkConnection is working';
@@ -16,8 +15,6 @@ void main() {
       expect(_connection.prevConnectionState, anyOf([true, false]));
       expect(_connection.timer, null);
     });
-
-    test(test2, () {});
 
     test(testGetRandomDomain, () {
       expect(_connection.getRandomDomain().runtimeType, String);

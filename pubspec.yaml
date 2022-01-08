@@ -1,6 +1,6 @@
 name: palestine_connection
 description: Lightweight internet connection test, lookup any provided domain.
-version: 0.0.16
+version: 0.0.17
 
 homepage: https://github.com/msayed-net/PalestineDevelopers
 

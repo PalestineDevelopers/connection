@@ -2,6 +2,10 @@
 
 * Improvements
 
+## 0.0.17
+
+* Automated tests.
+
 ## 0.0.16
 
 * Support one more platform.
