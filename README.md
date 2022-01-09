@@ -5,7 +5,7 @@
 Lightweight internet connection test, lookup Google domain.
 
 [![License](https://img.shields.io/github/license/PalestineDevelopers/connection?style=for-the-badge)](https://github.com/PalestineDevelopers)
-[![Pub](https://img.shields.io/badge/SMS%20Misr-pub-blue?style=for-the-badge)](https://pub.dev/packages/palestine_connection)
+[![Pub](https://img.shields.io/badge/Palestine%20Connection-pub-blue?style=for-the-badge)](https://pub.dev/packages/palestine_connection)
 [![Example](https://img.shields.io/badge/Example-Ex-success?style=for-the-badge)](https://pub.dev/packages/palestine_connection/example)
 
 [![GitHub release](https://img.shields.io/github/v/release/PalestineDevelopers/connection?style=for-the-badge)](https://github.com/PalestineDevelopers/connection/releases)
