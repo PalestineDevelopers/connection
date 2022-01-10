@@ -2,6 +2,10 @@
 
 * Improvements
 
+## 0.0.20
+
+* downgrade dep versions.
+
 ## 0.0.17 | 0.0.18 | 0.0.19
 
 * Automated tests.
