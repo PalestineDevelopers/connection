@@ -21,7 +21,7 @@ void main() {
     });
 
     test(testInit, () async {
-      _connection.initialize(
+      await _connection.initialize(
         periodicInSeconds: 3,
         onConnectionLost: () {},
         onConnectionRestored: () {},
@@ -31,6 +31,9 @@ void main() {
       expect(_connection.timer!.isActive, true);
 
       expect(_connection.prevConnectionState, anyOf([true, false]));
+
+      // waits for timer to complete
+      await Future.delayed(const Duration(seconds: 3 * 3), () {});
     });
 
     test(testCheckConnection, () async {

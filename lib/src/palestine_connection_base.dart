@@ -22,12 +22,12 @@ class PalConnection {
   /// initialize package
   ///---
   /// Start periodic process to check connection..
-  void initialize({
+  Future<void> initialize({
     String domain = PalDomain.random,
     required int periodicInSeconds,
     required VoidCallback onConnectionLost,
     required VoidCallback onConnectionRestored,
-  }) {
+  }) async {
     timer = Timer.periodic(
       Duration(seconds: periodicInSeconds),
       (Timer timer) async {
