@@ -1,5 +1,5 @@
 ---
-name: Dart CI - Package Release
+name: Dart CD
 
 on:
   push:
