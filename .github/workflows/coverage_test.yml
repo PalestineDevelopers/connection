@@ -1,4 +1,4 @@
-name: Dart CI - Test Coverage
+name: Dart CI
 on:
   push:
     branches: [main]
@@ -11,13 +11,18 @@ jobs:
         working-directory: ./
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: subosito/flutter-action@v1
+      - name: Start Job
+        uses: actions/checkout@v1
+      - name: Install Flutter
+        uses: subosito/flutter-action@v1
         with:
           flutter-version: "2.8.1"
           channel: "stable"
-      - run: flutter pub get
-      - run: flutter test --coverage
-      - uses: codecov/codecov-action@v1.0.7
+      - name: Get Packages
+        run: flutter pub get
+      - name: Test Coverage
+        run: flutter test --coverage
+      - name: Insall VeryGoodCoverage
+        uses: codecov/codecov-action@v1.0.7
       - name: Very Good Coverage
         uses: VeryGoodOpenSource/very_good_coverage@v1.2.0
