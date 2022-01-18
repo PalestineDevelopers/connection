@@ -20,6 +20,7 @@ Lightweight internet connection test, lookup Google domain.
 * [Features](#features)
 * [Getting started](#getting-started)
 * [Usage](#usage)
+* [Contributors](#contributors)
 
 ## Features
 
@@ -71,3 +72,7 @@ Then you could dispose it
 ```dart
 connection.dispose();
 ```
+
+## Contributors
+
+![Contributors](https://contrib.rocks/image?repo=palestinedevelopers/connection)
