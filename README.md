@@ -2,7 +2,7 @@
 
 ## Part of [PalestineDevelopers](https://github.com/PalestineDevelopers)
 
-Lightweight internet connection test, lookup Google domain.
+Lightweight internet connection test, lookup any domain/domainList.
 
 [![License](https://img.shields.io/github/license/PalestineDevelopers/connection?style=for-the-badge)](https://github.com/PalestineDevelopers)
 [![Pub](https://img.shields.io/badge/Palestine%20Connection-pub-blue?style=for-the-badge)](https://pub.dev/packages/palestine_connection)
@@ -50,7 +50,7 @@ connection.initialize(
     onConnectionRestored: () {
       // Internet is back
     },
-  );
+);
 ```
 
 It could get more easier actually
@@ -64,13 +64,30 @@ PalConnection().initialize(
     onConnectionRestored: () {
       // Internet is back
     },
-  );
+);
 ```
 
 Then you could dispose it
 
 ```dart
 connection.dispose();
+```
+
+To monitor a list of domains
+Just as easy as this
+
+```dart
+final PalConnection connection = PalConnection();
+connection.initializeMulti(
+    domains: [PalDomain.random, PalDomain.random, 'bad.do.main'],
+    periodicInSeconds: 3,
+    onConnectionLost: (domain) {
+        // domain is down
+    },
+    onConnectionRestored: (domain) {
+        // domain is now up
+    },
+);
 ```
 
 ## Contributors
