@@ -6,6 +6,7 @@ void main() {
     const String testInitValues = 'if variables has start type';
     const String testGetRandomDomain = 'if getRandomDomain return String';
     const String testInit = 'if init working and timer assigned';
+    const String testMultiInit = 'if init working and timers assigned';
     const String testCheckConnection = 'if checkConnection is working';
     const String testDispose = 'if dispose is working';
 
@@ -61,6 +62,38 @@ void main() {
 
     test(testDispose, () async {
       // TODO : Change to true
+      expect(_connection.dispose(), true);
+    });
+
+    tearDown(() {
+      _connection.dispose();
+    });
+
+    test(testMultiInit, () async {
+      await _connection.initializeMulti(
+        domains: [PalDomain.random, PalDomain.random, 'bad.do.main'],
+        periodicInSeconds: 3,
+        onConnectionLost: (domain) {
+          expect(domain, 'bad.do.main');
+        },
+        onConnectionRestored: (domain) {},
+      );
+      _connection.prevConnectionStates.last = true;
+      expect(_connection.timers.first, isNot(null));
+      expect(_connection.timers.first!.isActive, true);
+
+      expect(_connection.prevConnectionStates.first, anyOf([true, false]));
+
+      expect(_connection.timers.last, isNot(null));
+      expect(_connection.timers.last!.isActive, true);
+
+      expect(_connection.prevConnectionStates.last, anyOf([true, false]));
+
+      // waits for timer to complete
+      await Future.delayed(const Duration(seconds: 3 * 3), () {});
+    });
+
+    test(testDispose, () async {
       expect(_connection.dispose(), true);
     });
   });
