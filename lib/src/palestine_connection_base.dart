@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:palestine_connection/palestine_connection.dart';
 
 typedef VoidCallback = void Function();
+typedef DomainCallback = void Function(String? domain);
 
 class PalConnection {
   factory PalConnection() => _singleton;
@@ -14,9 +15,9 @@ class PalConnection {
   static final PalConnection _singleton = PalConnection._internal();
 
   /// Timer object
-  Timer? timer;
+  List<Timer?> timers = [null];
 
-  bool prevConnectionState = false;
+  List<bool> prevConnectionStates = [false];
 
   ///---
   /// initialize package
@@ -28,26 +29,54 @@ class PalConnection {
     required VoidCallback onConnectionLost,
     required VoidCallback onConnectionRestored,
   }) async {
-    timer = Timer.periodic(
-      Duration(seconds: periodicInSeconds),
-      (Timer timer) async {
-        final bool state = await checkConnection(domain);
-        if (state != prevConnectionState) {
-          prevConnectionState = state;
-          state ? onConnectionRestored() : onConnectionLost();
-        }
-      },
+    timers = List.generate(
+      1,
+      (index) => Timer.periodic(
+        Duration(seconds: periodicInSeconds),
+        (Timer timer) async {
+          final bool state = await checkConnection(domain);
+          if (state != prevConnectionStates.elementAt(index)) {
+            prevConnectionStates[index] = state;
+            state ? onConnectionRestored() : onConnectionLost();
+          }
+        },
+      ),
+    );
+  }
+
+  Future<void> initializeMulti({
+    List<String> domains = const [PalDomain.random],
+    required int periodicInSeconds,
+    required DomainCallback onConnectionLost,
+    required DomainCallback onConnectionRestored,
+  }) async {
+    prevConnectionStates = List.generate(domains.length, (index) => false);
+    timers = List.generate(
+      domains.length,
+      (index) => Timer.periodic(
+        Duration(seconds: periodicInSeconds),
+        (Timer timer) async {
+          final bool state = await checkConnection(domains.elementAt(index));
+          if (state != prevConnectionStates.elementAt(index)) {
+            prevConnectionStates[index] = state;
+            state
+                ? onConnectionRestored(domains.elementAt(index))
+                : onConnectionLost(domains.elementAt(index));
+          }
+        },
+      ),
     );
   }
 
   /// Stop the process..
   bool dispose() {
-    if (timer != null && timer!.isActive) {
-      timer!.cancel();
-
-      return true;
+    for (final timer in timers) {
+      if (timer != null && timer.isActive) {
+        timer.cancel();
+      }
     }
-    return false;
+
+    return timers.isNotEmpty;
   }
 
   ///---

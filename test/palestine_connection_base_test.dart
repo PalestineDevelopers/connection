@@ -11,9 +11,9 @@ void main() {
 
     final PalConnection _connection = PalConnection();
     test(testInitValues, () async {
-      expect(_connection.prevConnectionState.runtimeType, bool);
-      expect(_connection.prevConnectionState, anyOf([true, false]));
-      expect(_connection.timer, null);
+      expect(_connection.prevConnectionStates[0].runtimeType, bool);
+      expect(_connection.prevConnectionStates[0], anyOf([true, false]));
+      expect(_connection.timers[0], null);
     });
 
     test(testGetRandomDomain, () {
@@ -27,10 +27,10 @@ void main() {
         onConnectionRestored: () {},
       );
 
-      expect(_connection.timer, isNot(null));
-      expect(_connection.timer!.isActive, true);
+      expect(_connection.timers[0], isNot(null));
+      expect(_connection.timers[0]!.isActive, true);
 
-      expect(_connection.prevConnectionState, anyOf([true, false]));
+      expect(_connection.prevConnectionStates[0], anyOf([true, false]));
 
       // waits for timer to complete
       await Future.delayed(const Duration(seconds: 3 * 3), () {});
