@@ -25,7 +25,8 @@ Lightweight internet connection test, lookup any domain/domainList.
 ## Features
 
 * Periodic internet connection tests
-* dispose method
+* monitor domains
+* dispose
 
 ## Getting started
 
