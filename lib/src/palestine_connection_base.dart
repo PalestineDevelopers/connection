@@ -17,7 +17,7 @@ class PalConnection {
   /// Timer object
   List<Timer?> timers = [null];
 
-  List<bool> prevConnectionStates = [false];
+  List<bool?> prevConnectionStates = [null];
 
   ///---
   /// initialize package
@@ -50,7 +50,7 @@ class PalConnection {
     required DomainCallback onConnectionLost,
     required DomainCallback onConnectionRestored,
   }) async {
-    prevConnectionStates = List.generate(domains.length, (index) => false);
+    prevConnectionStates = List.generate(domains.length, (index) => null);
     timers = List.generate(
       domains.length,
       (index) => Timer.periodic(
